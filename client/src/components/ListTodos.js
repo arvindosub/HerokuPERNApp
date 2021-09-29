@@ -30,6 +30,7 @@ const ListTodos = () => {
         try {
             const deleteTodo = await fetch(`/todos/${id}`, { method: "DELETE" });
             setTodos(todos.filter(todo => todo.todo_id !== id));
+            window.location = "/";
         } catch (err) {
             console.error(err.message);
         }
