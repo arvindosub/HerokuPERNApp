@@ -22,6 +22,7 @@ const InputTodo = () => {
     return (
         <Fragment>
             <h1 className="text-center mt-5">ToDo List</h1>
+            <p className="text-center">(list items are added to and read from PostgreSQL database)</p>
             <form className="d-flex mt-5" onSubmit={onSubmitForm}>
                 <input 
                     type="text" 
