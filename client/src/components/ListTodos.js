@@ -4,6 +4,7 @@ import EditTodo from "./EditTodo";
 const ListTodos = () => {
 
     const [todos, setTodos] = useState([]);
+    const [remCap, setRemCap] = useState();
 
     const getTodos = async () => {
         try {
@@ -15,6 +16,16 @@ const ListTodos = () => {
         }
     }
 
+    const getCap = async () => {
+        try {
+            const response = await fetch("/cap");
+            var cap = await response.json();
+            setRemCap(cap);
+        } catch (err) {
+            console.error(err.message);
+        }
+    }
+    
     const deleteTodo = async id => {
         try {
             const deleteTodo = await fetch(`/todos/${id}`, { method: "DELETE" });
@@ -26,6 +37,7 @@ const ListTodos = () => {
     
     useEffect(() => {
         getTodos();
+        getCap();
     }, []);
 
     return (
@@ -52,6 +64,8 @@ const ListTodos = () => {
                     ))}
                 </tbody>
             </table>
+            <h4 className="text-center mt-5">Remaining Capacity: {remCap}</h4>
+            <p className="text-center">(calculated by calling Python script from NodeJS)</p>
         </Fragment>
     );
 };

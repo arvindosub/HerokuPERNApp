@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const pool = require("./db");
+const { spawn } = require('child_process');
 const path = require("path");
 const PORT = process.env.PORT || 5000;
 
@@ -69,6 +70,24 @@ app.delete("/todos/:id", async(req, res) => {
         const { id } = req.params;
         const deleteTodo = await pool.query("DELETE FROM todo WHERE todo_id = $1", [id])
         res.json("Todo was deleted!");
+    } catch (err) {
+        console.error(err.message);
+    }
+});
+//call python script
+app.get("/cap", async (req, res) => {
+    try {
+        const allTodos = await pool.query("SELECT * FROM todo");
+        const py = spawn('python', ['calc.py', allTodos.rows.length]);
+        py.stdout.on('data', (data) => {
+            res.json(data.toString());
+        });
+        py.stderr.on('data', (data) => {
+            return;
+        });
+        py.on('close', (code) => {
+            return;
+        });
     } catch (err) {
         console.error(err.message);
     }
